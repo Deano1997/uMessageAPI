@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using uMessageAPI.Extensions;
 
 namespace uMessageAPI {
     public class Startup {
@@ -22,11 +24,18 @@ namespace uMessageAPI {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.ConfigureDbContext(Configuration);
+            services.ConfigureIdentity(Configuration);
+            services.ConfigureAuthentication(Configuration);
+            services.ConfigureCors(Configuration);
+            services.ConfigureOpenApiDocument(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+            // Check whether development mode is currently active.
             if (env.IsDevelopment()) {
+                // Allow developers to have a more detailed exception page.
                 app.UseDeveloperExceptionPage();
             }
             else {
@@ -35,6 +44,15 @@ namespace uMessageAPI {
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseCors("CorsPolicy");
+            app.UseForwardedHeaders(new ForwardedHeadersOptions {
+                // Configure our web application to use all the available forwarded headers
+                // in case we are behind a proxy.
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+            app.UseSwagger();
+            app.UseSwaggerUi3();
             app.UseMvc();
         }
     }
