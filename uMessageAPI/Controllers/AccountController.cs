@@ -95,7 +95,7 @@ namespace uMessageAPI.Controllers {
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> CreateAccount([FromBody] CreateAccountDTO model) {
+        public async Task<ActionResult<AccountDTO>> CreateAccount([FromBody] CreateAccountDTO model) {
             // Create user object from our data transfer object.
             var user = uMessageAPI.Models.User.FromCreateAccountDTO(model);
             // Create user and assign given password.
@@ -104,8 +104,8 @@ namespace uMessageAPI.Controllers {
             if (result.Succeeded) {
                 // Get the token for given user.
                 var userToken = GetToken(user);
-                // Generate the token response for given user.
-                return NoContent();
+                // Generate the user response for given user.
+                return Ok(AccountDTO.FromUser(user));
             }
 
             // TODO: User result.Errors to inform frontend about possible errors.
