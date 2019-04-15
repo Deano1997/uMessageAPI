@@ -6,6 +6,7 @@ namespace uMessageAPI.Models
     public class User : IdentityUser
     {
 
+
         public void UpdateFromUpdateAccountDTO(UpdateAccountDTO model) {
             this.Email = model.Email;
         }
