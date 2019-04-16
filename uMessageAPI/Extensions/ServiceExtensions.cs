@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Pomelo.EntityFrameworkCore.MySql;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using NSwag;
 using NSwag.SwaggerGeneration.Processors.Security;
 using System;
@@ -19,9 +21,14 @@ namespace uMessageAPI.Extensions
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration) {
             // Configure the database context for our web application.
-            services.AddDbContext<ApplicationDbContext>(options => {
-                // TODO: Provide database coverage based on configuration.
-                options.UseInMemoryDatabase("umessage");
+            services.AddDbContextPool<ApplicationDbContext>(options => {
+                // Get the default database connection string.
+                var defaultConnectionString = configuration.GetConnectionString("DefaultConnection");
+                // Configure the MySql to use the given connection string.
+                options.UseMySql(defaultConnectionString, mysqlOptions => {
+                    // Configure the MySql being used so that
+                    mysqlOptions.ServerVersion(new Version(5, 7), ServerType.MySql);
+                });
             });
         }
 
