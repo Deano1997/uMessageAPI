@@ -10,6 +10,5 @@ namespace uMessageAPI.Models {
 
         void SaveChanges();
 
-
     }
 }

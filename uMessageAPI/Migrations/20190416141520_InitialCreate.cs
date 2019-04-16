@@ -54,8 +54,8 @@ namespace uMessageAPI.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
-                    Modified = table.Column<DateTime>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false)
+                    Created = table.Column<DateTime>(nullable: false),
+                    Modified = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,7 +174,7 @@ namespace uMessageAPI.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Text = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Modified = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<string>(nullable: true)
@@ -195,7 +195,8 @@ namespace uMessageAPI.Migrations
                 columns: table => new
                 {
                     ChannelId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    Role = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

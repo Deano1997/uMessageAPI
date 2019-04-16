@@ -147,6 +147,8 @@ namespace uMessageAPI.Migrations
 
                     b.Property<string>("UserId");
 
+                    b.Property<int>("Role");
+
                     b.HasKey("ChannelId", "UserId");
 
                     b.HasIndex("UserId");
@@ -163,7 +165,8 @@ namespace uMessageAPI.Migrations
 
                     b.Property<DateTime>("Modified");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .IsRequired();
 
                     b.Property<string>("UserId");
 

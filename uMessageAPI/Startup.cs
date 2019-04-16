@@ -50,7 +50,6 @@ namespace uMessageAPI {
                         context.Database.Migrate();
                     }
                 }
-                // TODO: Seed with default data required for project.
             }
         }
 
