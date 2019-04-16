@@ -1,21 +1,17 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Pomelo.EntityFrameworkCore.MySql;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using NSwag;
 using NSwag.SwaggerGeneration.Processors.Security;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
-using System.Text;
 using uMessageAPI.Data;
 using uMessageAPI.Models;
 using uMessageAPI.Utility;
 
-namespace uMessageAPI.Extensions
-{
+namespace uMessageAPI.Extensions {
     public static class ServiceExtensions
     {
 

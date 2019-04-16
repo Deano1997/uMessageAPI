@@ -8,12 +8,11 @@ using Xunit;
 namespace uMessageApi.Tests {
     public class uMessageServiceTests {
 
-
         private ApplicationDbContext createDbContext() {
             var options = new DbContextOptionsBuilder()
                .UseInMemoryDatabase(databaseName: "uMessage")
                .Options;
-
+ 
             return new ApplicationDbContext(options);
         }
 
@@ -22,13 +21,14 @@ namespace uMessageApi.Tests {
             // Run the test against one instance of the context
             using (var context = createDbContext()) {
                 var repository = new ChannelRepository(context);
-                var mockChannel = new Channel() { Id = 1, Name = "TestingChannel" };
+                var mockChannel = new Channel() { Name = "TestingChannel" };
+                
                 repository.Delete(mockChannel);
                 repository.SaveChanges();
 
-                var result = repository.Get(mockChannel.Id);
+                var result = repository.GetById();
 
-                Assert.Null(result);
+                Assert.Null(result); 
             }
         }
 
@@ -37,11 +37,11 @@ namespace uMessageApi.Tests {
             // Run the test against one instance of the context
             using (var context = createDbContext()) {
                 var repository = new ChannelRepository(context);
-                var mockChannel = new Channel() { Id = 1, Name = "TestingChannel" };
+                var mockChannel = new Channel() { Name = "TestingChannel" };
                 repository.Add(mockChannel);
                 repository.SaveChanges();
 
-                var result = repository.Get(1);
+                var result = repository.GetById(mockChannel.Id);
 
                 Assert.Equal(mockChannel.Name, result.Name);
             }
@@ -54,14 +54,14 @@ namespace uMessageApi.Tests {
             // Run the test against one instance of the context
             using (var context = createDbContext()) {
                 var repository = new ChannelRepository(context);
-                var mockChannel = new Channel() { Id = 1, Name = "TestingChannel"};
+                var mockChannel = new Channel() { Name = "TestingChannel"};
                 repository.Add(mockChannel);
                 repository.SaveChanges();
                 mockChannel.Name = "Testingtt";
                 repository.Update(mockChannel);
                 repository.SaveChanges();
 
-                var result = repository.Get(1);
+                var result = repository.GetById(mockChannel.Id);
 
                 Assert.Equal(mockChannel.Name, result.Name);
             }
@@ -72,14 +72,14 @@ namespace uMessageApi.Tests {
             // Run the test against one instance of the context
             using (var context = createDbContext()) {
                 var repository = new ChannelRepository(context);
-                var mockChannel = new Channel() { Id = 1, Name = "TestingChannel", Modified = DateTime.Now };
+                var mockChannel = new Channel() { Name = "TestingChannel", Modified = DateTime.Now };
                 /* repository.Add(mockChannel);*/
                 repository.SaveChanges();
                 mockChannel.Modified = DateTime.Now;
                 repository.Update(mockChannel);
                 repository.SaveChanges();
 
-                var result = repository.Get(1);
+                var result = repository.GetById(mockChannel.Id);
 
                 Assert.Equal(mockChannel.Modified,result.Modified);
             }

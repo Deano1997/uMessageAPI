@@ -1,14 +1,12 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using uMessageAPI.Models;
 
-namespace uMessageAPI.Utility
-{
+namespace uMessageAPI.Utility {
     public static class JwtTokenHelper
     {
         public static SecurityKey CreateIssuerSigningKey(IConfiguration configuration) {

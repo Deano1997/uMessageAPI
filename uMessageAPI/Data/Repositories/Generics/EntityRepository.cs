@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using uMessageAPI.Models;
+using System;
+using System.Linq;
 using uMessageAPI.Models.Generics;
 
-namespace uMessageAPI.Data.Repositories.Generics
-{
+namespace uMessageAPI.Data.Repositories.Generics {
     public abstract class EntityRepository<EntityType> : IEntityRepository<EntityType>
       where EntityType: class, IEntity {
         

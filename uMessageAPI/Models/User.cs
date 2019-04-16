@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using uMessageAPI.DTOs.Account;
 
-namespace uMessageAPI.Models
-{
+namespace uMessageAPI.Models {
     public class User : IdentityUser<Guid>, Generics.IEntity
     {
 
