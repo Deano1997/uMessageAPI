@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using uMessageAPI.DTOs.Account;
 
 namespace uMessageAPI.Models
 {
     public class User : IdentityUser
     {
+        public ICollection<ChannelUser> ChannelUsers { get; set; }
 
 
         public void UpdateFromUpdateAccountDTO(UpdateAccountDTO model) {
