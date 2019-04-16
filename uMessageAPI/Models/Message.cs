@@ -16,8 +16,6 @@ namespace uMessageAPI.Models {
         public DateTime Modified { get; set; }
 
         public User User { get; set; }
-
-        public Channel Channel { get; set; }
         #endregion
 
     }
