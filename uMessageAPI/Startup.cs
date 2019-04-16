@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using uMessageAPI.Data;
 using uMessageAPI.Extensions;
 
 namespace uMessageAPI {
@@ -32,7 +34,27 @@ namespace uMessageAPI {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {   
+            // Apply required database changes before application startup.
+            UpdateDatabase(app, env);
+            // Configure web application server.
+            ConfigureWebServer(app, env);
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app, IHostingEnvironment env) {
+            // Only perform automatic database updates during development. In production mode this should
+            // be part of the deployment process.
+            if (env.IsDevelopment()) {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope()) {
+                    using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>()) {
+                        context.Database.Migrate();
+                    }
+                }
+                // TODO: Seed with default data required for project.
+            }
+        }
+
+        private static void ConfigureWebServer(IApplicationBuilder app, IHostingEnvironment env) {
             // Check whether development mode is currently active.
             if (env.IsDevelopment()) {
                 // Allow developers to have a more detailed exception page.
@@ -51,9 +73,13 @@ namespace uMessageAPI {
                 // in case we are behind a proxy.
                 ForwardedHeaders = ForwardedHeaders.All
             });
-            app.UseSwagger();
-            app.UseSwaggerUi3();
             app.UseMvc();
         }
+
+        private static void ConfigureSwagger(IApplicationBuilder app, IHostingEnvironment env) {
+            app.UseSwagger();
+            app.UseSwaggerUi3();
+        }
+
     }
 }
