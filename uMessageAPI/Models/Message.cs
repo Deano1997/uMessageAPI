@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace uMessageAPI.Models {
-    public class Message {
+    public class Message : Generics.IEntity {
 
         #region Properties
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string Text { get; set; }

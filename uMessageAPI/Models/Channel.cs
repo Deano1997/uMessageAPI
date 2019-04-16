@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace uMessageAPI.Models {
-    public class Channel {
+    public class Channel : Generics.IEntity {
 
         #region Properties
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -21,5 +21,6 @@ namespace uMessageAPI.Models {
         public ICollection<ChannelUser> ChannelUsers { get; set; }
 
         #endregion
+
     }
 }

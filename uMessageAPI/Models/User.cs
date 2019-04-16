@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System;
 using uMessageAPI.DTOs.Account;
 
 namespace uMessageAPI.Models
 {
-    public class User : IdentityUser
+    public class User : IdentityUser<Guid>, Generics.IEntity
     {
 
         #region Properties

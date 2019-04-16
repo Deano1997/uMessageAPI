@@ -1,36 +1,16 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using uMessageAPI.Models;
 
 namespace uMessageAPI.Data.Repositories {
-    public class MessageRepository : IMessageRepository {
-        private readonly ApplicationDbContext _dbContext;
+  public class MessageRepository : Generics.EntityRepository<Message>, IMessageRepository {
 
-        public MessageRepository(ApplicationDbContext dbContext) {
-            _dbContext = dbContext;
-        }
-        public void Add(Message message) {
-            _dbContext.Messages.Add(message);
-        }
+    public MessageRepository(ApplicationDbContext context) : base(context) { }
 
-        public void Delete(Message message) {
-            _dbContext.Messages.Remove(message);
-        }
-        public void Update(Message message) {
-            _dbContext.Messages.Update(message);
-        }
+    protected override DbSet<Message> EntityDataSet { get { return Context.Messages; } }
 
-        public Message Get(int id) {
-            return _dbContext.Messages.SingleOrDefault(r => r.Id == id);
-
-        }
-
-        public void SaveChanges() {
-            _dbContext.SaveChanges();
-        }
-
-        
-    }
+  }
 }
