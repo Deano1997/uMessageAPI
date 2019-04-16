@@ -9,7 +9,7 @@ using uMessageAPI.Data;
 namespace uMessageAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190416141520_InitialCreate")]
+    [Migration("20190416143214_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,7 +155,7 @@ namespace uMessageAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ChannelUser");
+                    b.ToTable("ChannelUsers");
                 });
 
             modelBuilder.Entity("uMessageAPI.Models.Message", b =>

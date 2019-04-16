@@ -191,7 +191,7 @@ namespace uMessageAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChannelUser",
+                name: "ChannelUsers",
                 columns: table => new
                 {
                     ChannelId = table.Column<int>(nullable: false),
@@ -200,15 +200,15 @@ namespace uMessageAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChannelUser", x => new { x.ChannelId, x.UserId });
+                    table.PrimaryKey("PK_ChannelUsers", x => new { x.ChannelId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_ChannelUser_Channels_ChannelId",
+                        name: "FK_ChannelUsers_Channels_ChannelId",
                         column: x => x.ChannelId,
                         principalTable: "Channels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChannelUser_AspNetUsers_UserId",
+                        name: "FK_ChannelUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -253,8 +253,8 @@ namespace uMessageAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChannelUser_UserId",
-                table: "ChannelUser",
+                name: "IX_ChannelUsers_UserId",
+                table: "ChannelUsers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -281,7 +281,7 @@ namespace uMessageAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ChannelUser");
+                name: "ChannelUsers");
 
             migrationBuilder.DropTable(
                 name: "Messages");

@@ -153,7 +153,7 @@ namespace uMessageAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ChannelUser");
+                    b.ToTable("ChannelUsers");
                 });
 
             modelBuilder.Entity("uMessageAPI.Models.Message", b =>
