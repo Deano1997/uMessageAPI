@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using uMessageAPI.Data;
 using uMessageAPI.Extensions;
+using uMessageAPI.Hub;
 
 namespace uMessageAPI {
     public class Startup {
@@ -18,12 +19,13 @@ namespace uMessageAPI {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.ConfigureDbContext(Configuration);
             services.ConfigureIdentity(Configuration);
             services.ConfigureAuthentication(Configuration);
             services.ConfigureCors(Configuration);
             services.ConfigureOpenApiDocument(Configuration);
+            services.AddSignalR();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +66,10 @@ namespace uMessageAPI {
                 // Configure our web application to use all the available forwarded headers
                 // in case we are behind a proxy.
                 ForwardedHeaders = ForwardedHeaders.All
+            });
+            app.UseSignalR(configure => {
+                // Configure our chat hub to be exposed on given route.
+                configure.MapHub<ServiceHub>("/signal-r");
             });
             app.UseMvc();
         }
