@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace uMessageAPI.DTOs
+namespace uMessageAPI.DTOs.Auth
 {
     public class TokenResultDTO
     {

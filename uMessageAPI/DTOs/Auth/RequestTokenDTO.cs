@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace uMessageAPI.DTOs
+namespace uMessageAPI.DTOs.Auth
 {
     public class RequestTokenDTO
     {

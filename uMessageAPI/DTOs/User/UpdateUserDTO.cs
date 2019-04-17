@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace uMessageAPI.DTOs.Account
+namespace uMessageAPI.DTOs.User
 {
-    public class UpdateAccountDTO
+    public class UpdateUserDTO
     {
 
         [Required]
