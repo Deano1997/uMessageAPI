@@ -22,11 +22,13 @@ namespace uMessageApi.Tests {
             using (var context = createDbContext()) {
                 var repository = new ChannelRepository(context);
                 var mockChannel = new Channel() { Name = "TestingChannel" };
-                
+
+                repository.Add(mockChannel);
+                repository.SaveChanges();
                 repository.Delete(mockChannel);
                 repository.SaveChanges();
 
-                var result = repository.GetById();
+                var result = repository.GetById(mockChannel.Id);
 
                 Assert.Null(result); 
             }
