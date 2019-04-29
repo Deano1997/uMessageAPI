@@ -78,8 +78,10 @@ namespace uMessageAPI.Extensions {
                 options.AddPolicy("CorsPolicy", builder => builder
                     // We do not list "credentials" as our web application does not use cookies but
                     // instead requires JWT tokens to be passed to identify a user.
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(host => true)
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .WithHeaders("Accept", "Authorization", "Content-Type", "Origin", "X-Requested-With")
                 );
             });
         }
