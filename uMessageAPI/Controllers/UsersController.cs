@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using uMessageAPI.DTOs;
 using uMessageAPI.DTOs.User;
 using uMessageAPI.Models;
 using uMessageAPI.Utility;
@@ -20,12 +17,15 @@ namespace uMessageAPI.Controllers {
 
         private readonly SignInManager<User> signInManager;
         private readonly UserManager<User> userManager;
-        private readonly IConfiguration configuration;
 
-        public UsersController(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration configuration) {
+        public UsersController(SignInManager<User> signInManager, UserManager<User> userManager) {
             this.signInManager = signInManager;
             this.userManager = userManager;
-            this.configuration = configuration;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<UserDTO[]>> List() {
+            throw new Exception("User repository should be used");
         }
 
         #region CRUD
@@ -49,88 +49,35 @@ namespace uMessageAPI.Controllers {
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetById(Guid id) {
-            // Get the currently logged in user.
-            var user = await GetCurrentUserAsync();
+            // Find the matching user for given identifier.
+            var user = await userManager.FindByIdAsync(id.ToString());
             // Check whether a valid user was resolved.
             if (user != null) {
                 // Generate the user response for given user.
                 return Ok(UserDTO.FromUser(user));
             }
 
-            return Unauthorized();
+            return NotFound();
         }
 
-        [HttpGet("current")]
-        public async Task<ActionResult<UserDTO>> GetBySession() {
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserDTO>> Update(Guid id, [FromBody] UpdateUserDTO model) {
             // Get the currently logged in user.
             var user = await GetCurrentUserAsync();
-            // Check whether a valid user was resolved.
-            if (user != null) {
-                // Generate the user response for given user.
-                return Ok(UserDTO.FromUser(user));
-            }
-
-            return Unauthorized();
-        }
-
-        [HttpPut]
-        public async Task<ActionResult<UserDTO>> Update([FromBody] UpdateUserDTO model) {
-            // Get the currently logged in user.
-            var user = await GetCurrentUserAsync();
-            // Check whether a valid user was resolved.
-            if (user != null) {
-                // Validate whether the provided password matches our user model. For security reasons we should not
-                // allow updates to the account without a corresponding password.
-                var passwordMatchResult = await signInManager.CheckPasswordSignInAsync(user, model.CurrentPassword, false);
-                // Check whether the user provided a valid password for current user.
-                if (passwordMatchResult.Succeeded) {
-                    // Update the user model with the information received from our DTO.
-                    user.UpdateFromUpdateUserDTO(model);
-                    // Check whether a new password is provided.
-                    if (model.NewPassword != null) {
-                        // Generate a new password has for the given password.
-                        user.PasswordHash = userManager.PasswordHasher.HashPassword(user, model.NewPassword);
-                    }
-                    // Save changes made to the user model.
-                    var result = await userManager.UpdateAsync(user);
-                    // Check whether updating the user model was successful.
-                    if (result.Succeeded) {
-                        // Reply with the updated version of the user model.
-                        return Ok(UserDTO.FromUser(user));
-                    }
-                    else {
-                        // TODO: User result.Errors to inform frontend about possible errors.
-                        return BadRequest();
-                    }
+            // Check whether the current user was resolved.
+            if (user != null && user.Id == id) {
+                // Update the user model with the information received from our DTO.
+                user.UpdateFromUpdateUserDTO(model);
+                // Save changes made to the user model.
+                var result = await userManager.UpdateAsync(user);
+                // Check whether updating the user model was successful.
+                if (result.Succeeded) {
+                    // Reply with the updated version of the user model.
+                    return Ok(UserDTO.FromUser(user));
                 }
             }
 
-            return Unauthorized();
-        }
-
-        [HttpDelete]
-        public async Task<ActionResult> Delete([FromBody] DeleteUserDTO model) {
-            // Get the currently logged in user.
-            var user = await GetCurrentUserAsync();
-            // Check whether a valid user was resolved.
-            if (user != null) {
-                // Validate whether the provided password matches our user model. For security reasons we should not
-                // allow updates to the account without a corresponding password.
-                var passwordMatchResult = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-                // Check whether the user provided a valid password for current user.
-                if (passwordMatchResult.Succeeded) {
-                    // Delete the given user account.
-                    var result = await userManager.DeleteAsync(user);
-                    // Check whether the operation was successful.
-                    if (result.Succeeded) {
-                        // Inform about successful delete operation.
-                        return NoContent();
-                    }
-                    // TODO: User result.Errors to inform frontend about possible errors.
-                }
-            }
-
-            return Unauthorized();
+            return Forbid();
         }
 
         #endregion
