@@ -20,6 +20,9 @@ namespace uMessageAPI.Extensions {
             services.AddDbContextPool<ApplicationDbContext>(options => {
                 // Get the default database connection string.
                 var defaultConnectionString = configuration.GetConnectionString("DefaultConnection");
+
+                Console.Out.WriteLine(defaultConnectionString);
+
                 // Configure the MySql to use the given connection string.
                 options.UseMySql(defaultConnectionString, mysqlOptions => {
                     // Configure the MySql being used so that

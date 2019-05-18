@@ -9,10 +9,5 @@ namespace uMessageAPI.DTOs.User
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        public string CurrentPassword { get; set; }
-
-        public string NewPassword { get; set; }
-
     }
 }
