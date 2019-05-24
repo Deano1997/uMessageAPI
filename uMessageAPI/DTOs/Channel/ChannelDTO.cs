@@ -7,5 +7,7 @@ namespace uMessageAPI.DTOs.Channel
         public static ChannelDTO FromChannel(uMessageAPI.Models.Channel channel) {
             return new ChannelDTO { };
         }
+
+
     }
 }

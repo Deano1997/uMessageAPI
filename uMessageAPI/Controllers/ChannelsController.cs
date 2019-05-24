@@ -5,6 +5,8 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using uMessageAPI.DTOs.Channel;
+using uMessageAPI.DTOs.Member;
+using uMessageAPI.DTOs.Message;
 using uMessageAPI.Models;
 using uMessageAPI.Utility;
 
@@ -17,10 +19,16 @@ namespace uMessageAPI.Controllers {
 
         private readonly UserManager<User> userManager;
         private readonly IChannelRepository channelRepository;
+        private readonly IMessageRepository messageRepository;
+        private readonly IMemberRepository memberRepository;
 
-        public ChannelsController(UserManager<User> userManager, IChannelRepository channelRepository) {
+        //messageRepo & memberRepo
+
+        public ChannelsController(UserManager<User> userManager, IChannelRepository channelRepository, IMessageRepository messageRepository, IMemberRepository memberRepository) {
             this.userManager = userManager;
             this.channelRepository = channelRepository;
+            this.messageRepository = messageRepository;
+            this.memberRepository = memberRepository;
         }
 
         #region Channels
@@ -32,19 +40,43 @@ namespace uMessageAPI.Controllers {
 
         [HttpPost]
         public async Task<ActionResult<ChannelDTO>> Create([FromBody] CreateChannelDTO model) {
-            throw new NotImplementedException();
+            var channel = uMessageAPI.Models.Channel.FromCreateChannelDTO(model);
+            // Create channel and assign a name.
+            channelRepository.Add(channel);
+            // Check whether thechannel was successfully created.
+            if (channel != null) {
+                // Generate the channel response for given channel.
+                return Ok(ChannelDTO.FromChannel(channel));
+            }
+
+            return NotFound();
         }
 
         [HttpGet("{channelId}")]
         public async Task<ActionResult<ChannelDTO>> GetById(Guid channelId) {
-            throw new NotImplementedException();
+            var channel = channelRepository.GetById(channelId);
+
+            if (channel != null) {
+                // Generate the user response for given user.
+                return Ok(ChannelDTO.FromChannel(channel));
+            }
+
+            return NotFound();
+
         }
 
         [HttpPut("{channelId}")]
         public async Task<ActionResult<ChannelDTO>> Update(Guid channelId, [FromBody] UpdateChannelDTO model) {
-            throw new NotImplementedException();
-        }
 
+            // Get the selected channel
+            var channel = channelRepository.GetById(channelId);
+                // Update the channel model with the information received from our DTO.
+                channel.UpdateFromUpdateChannelDTO(model);
+            // Save changes made to the channel model.
+            channelRepository.SaveChanges();
+            return NoContent();
+
+        }
         [HttpDelete("{channelId}")]
         public async Task<ActionResult> Delete(Guid channelId) {
             throw new NotImplementedException();
@@ -61,12 +93,32 @@ namespace uMessageAPI.Controllers {
 
         [HttpPost("{channelId}/messages")]
         public async Task<ActionResult<MessageDTO>> Create(Guid channelId, [FromBody] CreateMessageDTO model) {
-            throw new NotImplementedException();
+
+            var message = uMessageAPI.Models.Message.FromCreateMessageDTO(model);
+            // Check whether the current channel was resolved.
+            if ( message.ChannelId == channelId) {
+                // Create channel and assign a name.
+                messageRepository.Add(message);
+            }
+            // Check whether the channel was successfully created.
+            if (message != null) {
+                // Generate the channel response for given channel.
+                return Ok(MessageDTO.FromMessage(message));
+            }
+
+            return NotFound();
         }
 
         [HttpGet("{channelId}/messages/{messageId}")]
         public async Task<ActionResult<MessageDTO>> GetById(Guid channelId, Guid messageId) {
-            throw new NotImplementedException();
+            var message = messageRepository.GetById(messageId);
+
+            if (message != null) {
+                // Generate the user response for given user.
+                return Ok(MessageDTO.FromMessage(message));
+            }
+
+            return NotFound();
         }
 
         #endregion
@@ -74,7 +126,7 @@ namespace uMessageAPI.Controllers {
         #region Members
 
         [HttpGet("{channelId}/members")]
-        public async Task<ActionResult<MemberDTO[]>> List(Guid channelId) {
+        public async Task<ActionResult<MemberDTO[]>> MemberList(Guid channelId) {
             throw new NotImplementedException();
         }
 
@@ -84,7 +136,7 @@ namespace uMessageAPI.Controllers {
         }
 
         [HttpGet("{channelId}/members/{memberId}")]
-        public async Task<ActionResult<ChannelDTO>> GetById(Guid channelId, Guid memberId) {
+        public async Task<ActionResult<MemberDTO>> GetByMemberId(Guid channelId, Guid memberId) {
             throw new NotImplementedException();
         }
 

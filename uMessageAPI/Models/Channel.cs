@@ -19,7 +19,9 @@ namespace uMessageAPI.Models {
         [Required]
         public DateTime Modified { get; set; }
 
-        public ICollection<ChannelUser> ChannelUsers { get; set; }
+        public ICollection<Member> ChannelUsers { get; set; }
+
+        public ICollection<Message> ChannelMessages { get; set; }
 
         #endregion
 

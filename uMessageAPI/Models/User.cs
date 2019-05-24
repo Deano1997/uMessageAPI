@@ -9,7 +9,7 @@ namespace uMessageAPI.Models {
 
         #region Properties
 
-        public ICollection<ChannelUser> ChannelUsers { get; set; }
+        public ICollection<Member> ChannelUsers { get; set; }
 
         #endregion
 

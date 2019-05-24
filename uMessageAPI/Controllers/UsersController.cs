@@ -17,15 +17,28 @@ namespace uMessageAPI.Controllers {
 
         private readonly SignInManager<User> signInManager;
         private readonly UserManager<User> userManager;
+        private readonly IUserRepository userRepository;
 
-        public UsersController(SignInManager<User> signInManager, UserManager<User> userManager) {
+        public UsersController(SignInManager<User> signInManager, UserManager<User> userManager, IUserRepository userRepository) {
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<UserDTO[]>> List() {
-            throw new Exception("User repository should be used");
+
+            // throw new Exception("User repository should be used");
+
+            var userList = userRepository.GetAll();
+
+            if (userList != null) {
+                // Generate the user response for given users.
+                //return Ok(UserDTO.FromUser(userList));
+            }
+
+            return NotFound();
+
         }
 
         #region CRUD
