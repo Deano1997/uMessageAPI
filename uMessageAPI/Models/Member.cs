@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using uMessageAPI.DTOs.Member;
 
 namespace uMessageAPI.Models {
-    public class Member {
+    public class Member : Generics.IEntity {
 
         #region Properties
 
@@ -17,6 +17,7 @@ namespace uMessageAPI.Models {
 
         [Required]
         public MemberRole Role { get; set; }
+        public Guid Id { get; set; }
 
         #endregion
 
@@ -28,6 +29,7 @@ namespace uMessageAPI.Models {
 
         public static Member FromCreateMemberDTO(CreateMemberDTO model) {
             //return new Member { User = model.User, Role = model.Role};
+            throw new NotImplementedException();
         }
 
         #endregion

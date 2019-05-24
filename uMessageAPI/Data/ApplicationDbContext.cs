@@ -14,6 +14,7 @@ namespace uMessageAPI.Data
         public DbSet<Channel> Channels { get; set; }
         public DbSet<Member> ChannelUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Member> Members { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder) {
             base.OnModelCreating(builder);
