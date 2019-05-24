@@ -1,6 +1,6 @@
 namespace uMessageAPI.Models
 {
-    public enum ChannelUserRole
+    public enum MemberRole
     {
 
         USER = 1,

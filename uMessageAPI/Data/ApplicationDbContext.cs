@@ -12,8 +12,9 @@ namespace uMessageAPI.Data
 
         // TODO: Provide additional data sets that are accessible through our database connection.
         public DbSet<Channel> Channels { get; set; }
-        public DbSet<ChannelUser> ChannelUsers { get; set; }
+        public DbSet<Member> ChannelUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Member> Members { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder) {
             base.OnModelCreating(builder);

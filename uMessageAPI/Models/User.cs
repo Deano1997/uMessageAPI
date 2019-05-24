@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using uMessageAPI.DTOs.Account;
+using uMessageAPI.DTOs.User;
 
 namespace uMessageAPI.Models {
     public class User : IdentityUser<Guid>, Generics.IEntity
@@ -9,17 +9,17 @@ namespace uMessageAPI.Models {
 
         #region Properties
 
-        public ICollection<ChannelUser> ChannelUsers { get; set; }
+        public ICollection<Member> ChannelUsers { get; set; }
 
         #endregion
 
         #region DTO related helper methods
 
-        public void UpdateFromUpdateAccountDTO(UpdateAccountDTO model) {
+        public void UpdateFromUpdateUserDTO(UpdateUserDTO model) {
             this.Email = model.Email;
         }
 
-        public static User FromCreateAccountDTO(CreateAccountDTO model) {
+        public static User FromCreateUserDTO(CreateUserDTO model) {
             return new User { UserName = model.UserName, Email = model.Email };
         }
 

@@ -20,6 +20,9 @@ namespace uMessageAPI.Extensions {
             services.AddDbContextPool<ApplicationDbContext>(options => {
                 // Get the default database connection string.
                 var defaultConnectionString = configuration.GetConnectionString("DefaultConnection");
+
+                Console.Out.WriteLine(defaultConnectionString);
+
                 // Configure the MySql to use the given connection string.
                 options.UseMySql(defaultConnectionString, mysqlOptions => {
                     // Configure the MySql being used so that
@@ -78,8 +81,10 @@ namespace uMessageAPI.Extensions {
                 options.AddPolicy("CorsPolicy", builder => builder
                     // We do not list "credentials" as our web application does not use cookies but
                     // instead requires JWT tokens to be passed to identify a user.
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(host => true)
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .WithHeaders("Accept", "Authorization", "Content-Type", "Origin", "X-Requested-With")
                 );
             });
         }
