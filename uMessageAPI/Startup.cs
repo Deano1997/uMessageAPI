@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using uMessageAPI.Data;
+using uMessageAPI.Data.Repositories;
 using uMessageAPI.Extensions;
 using uMessageAPI.Hub;
+using uMessageAPI.Models;
 
 namespace uMessageAPI {
     public class Startup {
@@ -26,6 +28,11 @@ namespace uMessageAPI {
             services.ConfigureOpenApiDocument(Configuration);
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IChannelRepository, ChannelRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMemberRepository, MemberRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

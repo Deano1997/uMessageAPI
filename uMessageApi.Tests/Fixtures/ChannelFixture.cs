@@ -2,7 +2,7 @@
 using uMessageAPI.Models;
 
 namespace uMessageApi.Tests.Fixtures {
-    public class ChannelFixture : EntityFixtures  IDisposable {
+    /*public class ChannelFixture : EntityFixtures  IDisposable {
 
         public IChannelRepository Repository{ get; private set; }
 
@@ -11,5 +11,5 @@ namespace uMessageApi.Tests.Fixtures {
         }
 
 
-    }
+    }*/
 }

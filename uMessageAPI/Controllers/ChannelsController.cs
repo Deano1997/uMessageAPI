@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using uMessageAPI.DTOs.Channel;
 using uMessageAPI.DTOs.Member;
 using uMessageAPI.DTOs.Message;
 using uMessageAPI.Models;
-using uMessageAPI.Utility;
+using System.Linq;
 
 namespace uMessageAPI.Controllers {
 
@@ -32,10 +31,13 @@ namespace uMessageAPI.Controllers {
         }
 
         #region Channels
+        //Feature alleen channels waar currentUser toegang heeft zichtbaar maken(currentUser in members)
 
         [HttpGet]
         public async Task<ActionResult<ChannelDTO[]>> List() {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            //user meegeven(filter in repo)
+             return Ok(channelRepository.GetAll().Select(i => ChannelDTO.FromChannel(i)));
         }
 
         [HttpPost]
@@ -43,6 +45,7 @@ namespace uMessageAPI.Controllers {
             var channel = uMessageAPI.Models.Channel.FromCreateChannelDTO(model);
             // Create channel and assign a name.
             channelRepository.Add(channel);
+            channelRepository.SaveChanges();
             // Check whether thechannel was successfully created.
             if (channel != null) {
                 // Generate the channel response for given channel.
@@ -88,17 +91,25 @@ namespace uMessageAPI.Controllers {
 
         [HttpGet("{channelId}/messages")]
         public async Task<ActionResult<MessageDTO[]>> List(Guid channelId) {
-            throw new NotImplementedException();
+            var channel = channelRepository.GetById(channelId);
+
+            return Ok(channel.Messages.Select(i => MessageDTO.FromMessage(i)));
         }
 
         [HttpPost("{channelId}/messages")]
         public async Task<ActionResult<MessageDTO>> Create(Guid channelId, [FromBody] CreateMessageDTO model) {
+            //1)Channel laden via de channelrepository op basis van de channelId
+            var channel = channelRepository.GetById(channelId);
+            //2)Valideren currentUser rechten heeft om messages te posten (Utility helper function)
 
-            var message = uMessageAPI.Models.Message.FromCreateMessageDTO(model);
+            //3)Indien true, message.FromCreateMessageDTO(channel,model);
+
+            var message = uMessageAPI.Models.Message.FromCreateMessageDTO(channel,model);
             // Check whether the current channel was resolved.
             if ( message.ChannelId == channelId) {
-                // Create channel and assign a name.
+                // Create message and assign a name.
                 messageRepository.Add(message);
+                messageRepository.SaveChanges();
             }
             // Check whether the channel was successfully created.
             if (message != null) {
@@ -111,6 +122,9 @@ namespace uMessageAPI.Controllers {
 
         [HttpGet("{channelId}/messages/{messageId}")]
         public async Task<ActionResult<MessageDTO>> GetById(Guid channelId, Guid messageId) {
+
+            var channel = channelRepository.GetById(channelId);
+
             var message = messageRepository.GetById(messageId);
 
             if (message != null) {
@@ -127,12 +141,36 @@ namespace uMessageAPI.Controllers {
 
         [HttpGet("{channelId}/members")]
         public async Task<ActionResult<MemberDTO[]>> MemberList(Guid channelId) {
-            throw new NotImplementedException();
+            var channel = channelRepository.GetById(channelId);
+
+            return Ok(channel.Members.Select(i => MemberDTO.FromMember(i)));
         }
 
         [HttpPost("{channelId}/members")]
         public async Task<ActionResult<MemberDTO>> Create(Guid channelId, [FromBody] CreateMemberDTO model) {
-            throw new NotImplementedException();
+
+            //1)Channel laden via de channelrepository op basis van de channelId
+            var channel = channelRepository.GetById(channelId);
+            //2) valideren dat de currentUser de juiste rechten / rol heeft om een member toetevoegen via getCurrentUserAsync zit hij er niet in stuur Acces Denied terug
+            //3) De rollen nakijken, zijn rol opvragen. Huidige rol van de user moet kleiner of groter zijn anders Acces Denied terug.
+            //4)Indien true, member.FromCreateMemberDTO(channel,model);
+
+
+            var member = uMessageAPI.Models.Member.FromCreateMemberDTO(channel, model);
+
+            // Check whether the current channel was resolved.
+            if (member.ChannelId == channelId) {
+                // Create message and assign a name.
+                memberRepository.Add(member);
+                memberRepository.SaveChanges();
+            }
+            // Check whether the channel was successfully created.
+            if (member != null) {
+                // Generate the channel response for given channel.
+                return Ok(MemberDTO.FromMember(member));
+            }
+
+            return NotFound();
         }
 
         [HttpGet("{channelId}/members/{memberId}")]
@@ -158,6 +196,8 @@ namespace uMessageAPI.Controllers {
         private Task<uMessageAPI.Models.User> GetCurrentUserAsync() {
             return userManager.GetUserAsync(User);
         }
+
+        //HasAcces function schrijven.
 
         #endregion
 

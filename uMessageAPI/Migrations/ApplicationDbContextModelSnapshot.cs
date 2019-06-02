@@ -14,7 +14,7 @@ namespace uMessageAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -138,11 +138,13 @@ namespace uMessageAPI.Migrations
                     b.ToTable("Channels");
                 });
 
-            modelBuilder.Entity("uMessageAPI.Models.ChannelUser", b =>
+            modelBuilder.Entity("uMessageAPI.Models.Member", b =>
                 {
                     b.Property<Guid>("ChannelId");
 
                     b.Property<Guid>("UserId");
+
+                    b.Property<Guid>("Id");
 
                     b.Property<int>("Role");
 
@@ -150,13 +152,15 @@ namespace uMessageAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ChannelUsers");
+                    b.ToTable("Member");
                 });
 
             modelBuilder.Entity("uMessageAPI.Models.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ChannelId");
 
                     b.Property<DateTime>("Created");
 
@@ -168,6 +172,8 @@ namespace uMessageAPI.Migrations
                     b.Property<Guid?>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
 
                     b.HasIndex("UserId");
 
@@ -269,21 +275,26 @@ namespace uMessageAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("uMessageAPI.Models.ChannelUser", b =>
+            modelBuilder.Entity("uMessageAPI.Models.Member", b =>
                 {
                     b.HasOne("uMessageAPI.Models.Channel", "Channel")
-                        .WithMany("ChannelUsers")
+                        .WithMany("Members")
                         .HasForeignKey("ChannelId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("uMessageAPI.Models.User", "User")
-                        .WithMany("ChannelUsers")
+                        .WithMany("Members")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("uMessageAPI.Models.Message", b =>
                 {
+                    b.HasOne("uMessageAPI.Models.Channel", "Channel")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("uMessageAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

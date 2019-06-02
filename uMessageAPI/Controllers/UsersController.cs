@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using uMessageAPI.DTOs.User;
@@ -27,17 +28,8 @@ namespace uMessageAPI.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<UserDTO[]>> List() {
-
             // throw new Exception("User repository should be used");
-
-            var userList = userRepository.GetAll();
-
-            if (userList != null) {
-                // Generate the user response for given users.
-                //return Ok(UserDTO.FromUser(userList));
-            }
-
-            return NotFound();
+            return Ok(userRepository.GetAll().Select(i => UserDTO.FromUser(i)));
 
         }
 

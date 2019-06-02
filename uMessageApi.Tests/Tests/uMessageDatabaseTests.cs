@@ -2,7 +2,7 @@
 using Xunit;
 
 namespace uMessageApi.Tests.Tests {
-    public class uMessageDatabaseTests : IClassFixture<ChannelFixture> {
+    /*public class uMessageDatabaseTests : IClassFixture<ChannelFixture> {
         private ChannelFixture fixture;
 
         public uMessageDatabaseTests(ChannelFixture fixture) {
@@ -10,5 +10,5 @@ namespace uMessageApi.Tests.Tests {
         }
 
 
-    }
+    }*/
 }

@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -168,10 +168,37 @@ namespace uMessageAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Member",
+                columns: table => new
+                {
+                    ChannelId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    Role = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Member", x => new { x.ChannelId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_Member_Channels_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "Channels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Member_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    ChannelId = table.Column<Guid>(nullable: false),
                     Text = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Modified = table.Column<DateTime>(nullable: false),
@@ -181,36 +208,17 @@ namespace uMessageAPI.Migrations
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChannelUsers",
-                columns: table => new
-                {
-                    ChannelId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    Role = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChannelUsers", x => new { x.ChannelId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_ChannelUsers_Channels_ChannelId",
+                        name: "FK_Messages_Channels_ChannelId",
                         column: x => x.ChannelId,
                         principalTable: "Channels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChannelUsers_AspNetUsers_UserId",
+                        name: "FK_Messages_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -251,9 +259,14 @@ namespace uMessageAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChannelUsers_UserId",
-                table: "ChannelUsers",
+                name: "IX_Member_UserId",
+                table: "Member",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ChannelId",
+                table: "Messages",
+                column: "ChannelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_UserId",
@@ -279,7 +292,7 @@ namespace uMessageAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ChannelUsers");
+                name: "Member");
 
             migrationBuilder.DropTable(
                 name: "Messages");

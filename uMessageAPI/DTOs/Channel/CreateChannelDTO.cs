@@ -6,5 +6,6 @@ namespace uMessageAPI.DTOs.Channel
     {
         [Required]
         public string Name { get; set; }
+
     }
 }

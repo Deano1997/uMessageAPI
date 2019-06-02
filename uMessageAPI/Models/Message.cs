@@ -28,10 +28,11 @@ namespace uMessageAPI.Models {
 
         #region DTO related helper methods
 
-        public static Message FromCreateMessageDTO(CreateMessageDTO model) {
+        public static Message FromCreateMessageDTO(Channel channel, CreateMessageDTO model) {
             var currentTime = DateTime.Now;
+           
             // Create a channel object based on the model and current time.
-            return new Message { Text = model.Text, Created = currentTime, Modified = currentTime };
+            return new Message { Channel = channel, Text = model.Text, Created = currentTime, Modified = currentTime };
         }
 
         #endregion

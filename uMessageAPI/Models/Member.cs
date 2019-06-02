@@ -27,9 +27,8 @@ namespace uMessageAPI.Models {
             this.Role = model.Role;
         }
 
-        public static Member FromCreateMemberDTO(CreateMemberDTO model) {
-            //return new Member { User = model.User, Role = model.Role};
-            throw new NotImplementedException();
+        public static Member FromCreateMemberDTO(Channel channel, CreateMemberDTO model) {
+            return new Member { Channel = channel, UserId = model.UserId, Role = model.Role};
         }
 
         #endregion
