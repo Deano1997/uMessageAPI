@@ -6,11 +6,11 @@ namespace uMessageAPI.Models {
     public class Message : Generics.IEntity {
 
         #region Properties
-
+        [Required]
         public Guid Id { get; set; }
 
         public Guid ChannelId { get; set; }
-
+        [Required]
         public Channel Channel { get; set; }
 
         [Required]
@@ -21,8 +21,9 @@ namespace uMessageAPI.Models {
 
         [Required]
         public DateTime Modified { get; set; }
-
+        [Required]
         public User User { get; set; }
+
 
         #endregion
 

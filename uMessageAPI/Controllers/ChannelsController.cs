@@ -42,7 +42,8 @@ namespace uMessageAPI.Controllers {
 
         [HttpPost]
         public async Task<ActionResult<ChannelDTO>> Create([FromBody] CreateChannelDTO model) {
-            var channel = uMessageAPI.Models.Channel.FromCreateChannelDTO(model);
+            var channel = uMessageAPI.Models.Channel.FromCreateChannelDTO(model,await GetCurrentUserAsync());
+            //var member = new Member() { ChannelId = channel.Id, Role = MemberRole.OWNER,User = GetCurrentUserAsync };
             // Create channel and assign a name.
             channelRepository.Add(channel);
             channelRepository.SaveChanges();

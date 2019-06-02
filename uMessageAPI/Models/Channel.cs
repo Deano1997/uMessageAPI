@@ -7,7 +7,7 @@ namespace uMessageAPI.Models {
     public class Channel : Generics.IEntity {
 
         #region Properties
-
+        [Required]
         public Guid Id { get; set; }
 
         [Required]
@@ -34,12 +34,12 @@ namespace uMessageAPI.Models {
             this.Modified = DateTime.Now;
         }
 
-        public static Channel FromCreateChannelDTO(CreateChannelDTO model) {
+        public static Channel FromCreateChannelDTO(CreateChannelDTO model,User owner) {
             // Get the current time as we need this for created and modified to ensure
             // both contain the same value.
             var currentTime = DateTime.Now;
             // Create a channel object based on the model and current time.
-            return new Channel { Name = model.Name, Created = currentTime, Modified = currentTime };
+            return new Channel { Name = model.Name, Created = currentTime, Modified = currentTime, Members = new [] { new Member() { Role = MemberRole.OWNER,User =owner } } };
         }
 
         #endregion

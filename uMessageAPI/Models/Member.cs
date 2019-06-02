@@ -6,7 +6,7 @@ namespace uMessageAPI.Models {
     public class Member : Generics.IEntity {
 
         #region Properties
-
+        //Onnodig Id's wegdoen! 
         public Guid ChannelId { get; set; }
 
         public Channel Channel { get; set; }
@@ -17,6 +17,7 @@ namespace uMessageAPI.Models {
 
         [Required]
         public MemberRole Role { get; set; }
+        [Required]
         public Guid Id { get; set; }
 
         #endregion
