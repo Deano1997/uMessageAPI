@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace uMessageAPI.DTOs.User
@@ -10,8 +11,10 @@ namespace uMessageAPI.DTOs.User
         [Required]
         public string Email { get; set; }
 
+        public Guid Id { get; set; }
+
         public static UserDTO FromUser(uMessageAPI.Models.User model) {
-            return new UserDTO { UserName = model.UserName, Email = model.Email };
+            return new UserDTO { UserName = model.UserName, Email = model.Email, Id = model.Id };
         }
     }
 }

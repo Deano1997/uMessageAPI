@@ -23,17 +23,18 @@ namespace uMessageAPI.Models {
         public DateTime Modified { get; set; }
         [Required]
         public User User { get; set; }
+        public Guid UserId { get; set; }
 
 
         #endregion
 
         #region DTO related helper methods
 
-        public static Message FromCreateMessageDTO(Channel channel, CreateMessageDTO model) {
+        public static Message FromCreateMessageDTO(Channel channel, CreateMessageDTO model,User user) {
             var currentTime = DateTime.Now;
-           
+
             // Create a channel object based on the model and current time.
-            return new Message { Channel = channel, Text = model.Text, Created = currentTime, Modified = currentTime };
+            return new Message { Channel = channel, Text = model.Text, Created = currentTime, Modified = currentTime, User = user };
         }
 
         #endregion

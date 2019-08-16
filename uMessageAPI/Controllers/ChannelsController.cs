@@ -8,6 +8,8 @@ using uMessageAPI.DTOs.Member;
 using uMessageAPI.DTOs.Message;
 using uMessageAPI.Models;
 using System.Linq;
+using Microsoft.AspNetCore.SignalR;
+using uMessageAPI.Hub;
 
 namespace uMessageAPI.Controllers {
 
@@ -20,14 +22,17 @@ namespace uMessageAPI.Controllers {
         private readonly IChannelRepository channelRepository;
         private readonly IMessageRepository messageRepository;
         private readonly IMemberRepository memberRepository;
+        private IHubContext<NotifyHub, ITypedHubClient> hubContext;
+
 
         //messageRepo & memberRepo
 
-        public ChannelsController(UserManager<User> userManager, IChannelRepository channelRepository, IMessageRepository messageRepository, IMemberRepository memberRepository) {
+        public ChannelsController(UserManager<User> userManager, IChannelRepository channelRepository, IMessageRepository messageRepository, IMemberRepository memberRepository, IHubContext<NotifyHub, ITypedHubClient> hubContext) {
             this.userManager = userManager;
             this.channelRepository = channelRepository;
             this.messageRepository = messageRepository;
             this.memberRepository = memberRepository;
+            this.hubContext = hubContext;
         }
 
         #region Channels
@@ -36,8 +41,11 @@ namespace uMessageAPI.Controllers {
         [HttpGet]
         public async Task<ActionResult<ChannelDTO[]>> List() {
             //throw new NotImplementedException();
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+
             //user meegeven(filter in repo)
-             return Ok(channelRepository.GetAll().Select(i => ChannelDTO.FromChannel(i)));
+            return Ok(channelRepository.GetAll(userId).Select(i => ChannelDTO.FromChannel(i)));
         }
 
         [HttpPost]
@@ -93,8 +101,8 @@ namespace uMessageAPI.Controllers {
         [HttpGet("{channelId}/messages")]
         public async Task<ActionResult<MessageDTO[]>> List(Guid channelId) {
             var channel = channelRepository.GetById(channelId);
-
-            return Ok(channel.Messages.Select(i => MessageDTO.FromMessage(i)));
+            //2)Valideren currentUser rechten heeft om messages te posten (Utility helper function)
+            return Ok(messageRepository.GetAllByChannel(channel).Select(i => MessageDTO.FromMessage(i)));
         }
 
         [HttpPost("{channelId}/messages")]
@@ -105,13 +113,16 @@ namespace uMessageAPI.Controllers {
 
             //3)Indien true, message.FromCreateMessageDTO(channel,model);
 
-            var message = uMessageAPI.Models.Message.FromCreateMessageDTO(channel,model);
+            var message = uMessageAPI.Models.Message.FromCreateMessageDTO(channel,model, await GetCurrentUserAsync());
+            //message.ChannelId = channelId;
             // Check whether the current channel was resolved.
-            if ( message.ChannelId == channelId) {
-                // Create message and assign a name.
-                messageRepository.Add(message);
-                messageRepository.SaveChanges();
-            }
+            //if ( message.ChannelId == channelId) {
+            // Create message and assign a name.
+
+            await hubContext.Clients.All.BroadcastMessage(message.Text);
+            messageRepository.Add(message);
+            messageRepository.SaveChanges();
+            //}
             // Check whether the channel was successfully created.
             if (message != null) {
                 // Generate the channel response for given channel.
@@ -144,7 +155,10 @@ namespace uMessageAPI.Controllers {
         public async Task<ActionResult<MemberDTO[]>> MemberList(Guid channelId) {
             var channel = channelRepository.GetById(channelId);
 
-            return Ok(channel.Members.Select(i => MemberDTO.FromMember(i)));
+            return Ok(memberRepository.GetAllByChannel(channel).Select(i => MemberDTO.FromMember(i)));
+
+            //Verwijderen als het werkt.
+            //return Ok(channel.Members.Select(i => MemberDTO.FromMember(i)));
         }
 
         [HttpPost("{channelId}/members")]

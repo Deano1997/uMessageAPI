@@ -23,8 +23,10 @@ namespace uMessageAPI.DTOs.Message {
         public DateTime Modified { get; set; }
         [Required]
         public Guid UserId { get; set; }
+
+        public string userName { get; set; }
         public static MessageDTO FromMessage(uMessageAPI.Models.Message message) {
-            return new MessageDTO {Id = message.Id, ChannelId = message.ChannelId, Text = message.Text, Created = message.Created,  Modified = message.Modified};
+            return new MessageDTO {Id = message.Id, ChannelId = message.ChannelId, Text = message.Text, Created = message.Created,  Modified = message.Modified,UserId = message.UserId, userName = message.User.UserName};
         }
     }
 }

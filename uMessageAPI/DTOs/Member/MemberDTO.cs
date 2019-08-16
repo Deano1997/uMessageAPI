@@ -16,8 +16,10 @@ namespace uMessageAPI.DTOs.Member {
        [Required]
         public MemberRole Role { get; set; }
 
+        public string userName { get; set; }
+
         public static MemberDTO FromMember(uMessageAPI.Models.Member member) {
-            return new MemberDTO { ChannelId = member.ChannelId, UserId = member.UserId,Role =  member.Role};
+            return new MemberDTO { ChannelId = member.ChannelId, UserId = member.UserId,Role =  member.Role, userName = member.User.UserName};
         }
     }
 }

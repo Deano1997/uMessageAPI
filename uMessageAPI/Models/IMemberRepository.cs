@@ -14,7 +14,12 @@ namespace uMessageAPI.Models {
 
         void Update(Member member);
 
+        IEnumerable<Member> GetAllByChannel(Channel channel);
+
+
         void SaveChanges();
+
+
 
 
     }

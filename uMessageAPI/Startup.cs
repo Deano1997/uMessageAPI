@@ -75,7 +75,7 @@ namespace uMessageAPI {
             });
             app.UseSignalR(configure => {
                 // Configure our chat hub to be exposed on given route.
-                configure.MapHub<ServiceHub>("/signal-r");
+                configure.MapHub<NotifyHub>("/signal-r");
             });
             app.UseMvc();
         }

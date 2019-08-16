@@ -169,7 +169,7 @@ namespace uMessageAPI.Migrations
                     b.Property<string>("Text")
                         .IsRequired();
 
-                    b.Property<Guid?>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -297,7 +297,8 @@ namespace uMessageAPI.Migrations
 
                     b.HasOne("uMessageAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using uMessageAPI.DTOs.Channel;
 using uMessageAPI.Models;
@@ -18,8 +20,8 @@ namespace uMessageAPI.Data.Repositories {
             return EntityDataSet.FindAsync(id).Result;
         }
 
-        public IEnumerable<Channel> GetAll() {
-            return EntityDataSet;
+        public IEnumerable<Channel> GetAll(Guid? userId) {
+            return EntityDataSet.Where(g => g.Members.Any(gr => gr.UserId == userId));
         }
 
         public void saveChanges() {

@@ -9,7 +9,7 @@ using uMessageAPI.Data;
 namespace uMessageAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190602160917_InitialCreate")]
+    [Migration("20190603011334_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,7 +171,7 @@ namespace uMessageAPI.Migrations
                     b.Property<string>("Text")
                         .IsRequired();
 
-                    b.Property<Guid?>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -299,7 +299,8 @@ namespace uMessageAPI.Migrations
 
                     b.HasOne("uMessageAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

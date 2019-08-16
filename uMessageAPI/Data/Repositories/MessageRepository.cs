@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using uMessageAPI.Models;
+using System.Linq;
+using System;
 
 namespace uMessageAPI.Data.Repositories {
     public class MessageRepository : Generics.EntityRepository<Message>, IMessageRepository {
@@ -15,6 +17,9 @@ namespace uMessageAPI.Data.Repositories {
 
         public IEnumerable<Message> GetAll() {
             return EntityDataSet;
+        }
+        public IEnumerable<Message> GetAllByChannel(Channel channel) {
+            return EntityDataSet.Where(mes => mes.ChannelId == channel.Id).Include(u => u.User);
         }
 
         public void saveChanges() {

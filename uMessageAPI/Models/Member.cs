@@ -17,7 +17,6 @@ namespace uMessageAPI.Models {
 
         [Required]
         public MemberRole Role { get; set; }
-        [Required]
         public Guid Id { get; set; }
 
         #endregion
@@ -29,7 +28,7 @@ namespace uMessageAPI.Models {
         }
 
         public static Member FromCreateMemberDTO(Channel channel, CreateMemberDTO model) {
-            return new Member { Channel = channel, UserId = model.UserId, Role = model.Role};
+            return new Member { Channel = channel, UserId = model.UserId, Role = model.Role,ChannelId = model.ChannelId};
         }
 
         #endregion

@@ -10,5 +10,7 @@ namespace uMessageAPI.DTOs.Member {
         [Required]
         public MemberRole Role { get; set; }
         public Guid UserId { get;set; }
+
+        public Guid ChannelId { get; set; }
     }
 }

@@ -13,16 +13,16 @@ namespace uMessageAPI.Controllers {
     // FIXME: Remove controller after testing
     public class SignalRTestController : ControllerBase {
         
-        private IHubContext<ServiceHub, IServiceHubClient> serviceHubContext;
+        private IHubContext<NotifyHub, ITypedHubClient> serviceHubContext;
 
-        public SignalRTestController(IHubContext<ServiceHub, IServiceHubClient> serviceHubContext) {
+        public SignalRTestController(IHubContext<NotifyHub, ITypedHubClient> serviceHubContext) {
           this.serviceHubContext = serviceHubContext;
         }
 
         [HttpGet]
         public async Task<ActionResult> SendMessage() {
 
-            await serviceHubContext.Clients.All.BroadcastMessage("success", "Hello SignalR");
+            await serviceHubContext.Clients.All.BroadcastMessage( "Hello SignalR");
 
             return new NoContentResult();
         }

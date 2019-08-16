@@ -22,12 +22,12 @@ namespace uMessageAPI.Extensions {
                 var defaultConnectionString = configuration.GetConnectionString("DefaultConnection");
 
                 Console.Out.WriteLine(defaultConnectionString);
-
-                // Configure the MySql to use the given connection string.
-                options.UseMySql(defaultConnectionString, mysqlOptions => {
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            // Configure the MySql to use the given connection string.
+           // options.UseMySql(defaultConnectionString, mysqlOptions => {
                     // Configure the MySql being used so that
-                    mysqlOptions.ServerVersion(new Version(5, 7), ServerType.MySql);
-                });
+                   // mysqlOptions.ServerVersion(new Version(5, 7), ServerType.MySql);
+              //  });
             });
         }
 

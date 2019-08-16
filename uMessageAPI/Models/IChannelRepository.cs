@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using uMessageAPI.DTOs.Channel;
 
 namespace uMessageAPI.Models {
@@ -6,7 +7,7 @@ namespace uMessageAPI.Models {
 
         Channel FindById(string id);
 
-        IEnumerable<Channel> GetAll();
+        IEnumerable<Channel> GetAll(Guid? userId);
 
         void Add(Channel channel);
 

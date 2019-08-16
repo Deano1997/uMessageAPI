@@ -9,6 +9,7 @@ namespace uMessageAPI.Models {
         void Add(Message message);
 
         void Update(Message message);
+        IEnumerable<Message> GetAllByChannel(Channel channel);
 
         void saveChanges();
 

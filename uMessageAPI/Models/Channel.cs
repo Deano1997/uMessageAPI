@@ -39,7 +39,7 @@ namespace uMessageAPI.Models {
             // both contain the same value.
             var currentTime = DateTime.Now;
             // Create a channel object based on the model and current time.
-            return new Channel { Name = model.Name, Created = currentTime, Modified = currentTime, Members = new [] { new Member() { Role = MemberRole.OWNER,User =owner } } };
+            return new Channel { Name = model.Name, Created = currentTime, Modified = currentTime, Members = new [] { new Member() { Role = MemberRole.OWNER,User = owner } } };
         }
 
         #endregion
